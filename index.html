@@ -22,9 +22,7 @@
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--cream);
     color: var(--ink);
@@ -55,7 +53,6 @@
     transition: transform 0.15s ease-out, width 0.3s, height 0.3s, border-color 0.2s;
     opacity: 0.6;
   }
-  body:hover .cursor { opacity: 1; }
 
   /* NAV */
   nav {
@@ -66,7 +63,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.2rem 4rem;
-    mix-blend-mode: normal;
     transition: background 0.4s, backdrop-filter 0.4s;
   }
   nav.scrolled {
@@ -228,56 +224,6 @@
     text-transform: uppercase;
     margin-top: 0.2rem;
   }
-  .hero-cta-row {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 3.5rem;
-    opacity: 0;
-    animation: fadeUp 0.9s 1s forwards;
-  }
-  .btn-primary {
-    background: var(--orange);
-    color: white;
-    padding: 1rem 2.5rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: none;
-    cursor: none;
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  }
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--orange-light);
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-  }
-  .btn-primary:hover::before { transform: translateX(0); }
-  .btn-primary span { position: relative; z-index: 1; }
-  .btn-secondary {
-    color: var(--beige);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: gap 0.3s, color 0.3s;
-  }
-  .btn-secondary:hover { gap: 1rem; color: var(--orange-light); }
-  .btn-secondary .arrow { font-size: 1.2rem; }
 
   /* FLOATING DECORATION */
   .hero-float-badge {
@@ -291,7 +237,6 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    animation: spin-slow 20s linear infinite;
     opacity: 0;
     animation: floatIn 1s 1.2s forwards, spin-slow 20s 2.2s linear infinite;
   }
@@ -506,6 +451,261 @@
   .service-card:not(.featured) .service-tag { color: var(--teal); }
   .service-card:not(.featured):hover .service-tag { color: var(--beige); }
   .service-card.featured .service-tag { color: var(--beige); }
+
+  /* ===================== */
+  /* UGC PARTNERSHIP SECTION */
+  /* ===================== */
+  .ugc-section {
+    background: #EEE8FF;
+    padding: 8rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .ugc-section::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,86,10,0.08), transparent 70%);
+    pointer-events: none;
+  }
+  .ugc-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  /* Phone mockups side */
+  .ugc-phones {
+    position: relative;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .phone-mockup {
+    position: absolute;
+    width: 200px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.2), 0 10px 30px rgba(0,0,0,0.15);
+    border: 3px solid rgba(255,255,255,0.6);
+    background: #000;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .phone-mockup:hover {
+    z-index: 10 !important;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.3), 0 15px 40px rgba(232,86,10,0.15);
+    border-color: rgba(232,86,10,0.7);
+  }
+  .phone-mockup img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .phone-inner {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    background: #111;
+    overflow: hidden;
+  }
+  .phone-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Reels UI overlay */
+  .phone-ui {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .phone-ui-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px 6px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+  }
+  .phone-ui-top span {
+    font-size: 10px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .phone-ui-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 8px 10px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+  }
+  .phone-ui-caption {
+    font-size: 9px;
+    color: white;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+  .phone-ui-user {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+  }
+  .phone-ui-avatar {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8560A, #FF7A35);
+    border: 1.5px solid white;
+  }
+  .phone-ui-username {
+    font-size: 9px;
+    color: white;
+    font-weight: 600;
+  }
+  .phone-ui-follow {
+    font-size: 8px;
+    color: white;
+    border: 1px solid white;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: auto;
+  }
+  .phone-ui-partnership {
+    font-size: 8px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+  }
+  .phone-ui-right {
+    position: absolute;
+    right: 8px;
+    bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .phone-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .phone-action-icon {
+    font-size: 18px;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  }
+  .phone-action-count {
+    font-size: 8px;
+    color: white;
+    font-weight: 600;
+  }
+  .heart-icon { color: #ff4d6d; }
+
+  /* Positioning the 3 phones */
+  .phone-left {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(-8deg);
+    z-index: 1;
+  }
+  .phone-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1.08);
+    z-index: 3;
+  }
+  .phone-right {
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(7deg);
+    z-index: 2;
+  }
+
+  /* UGC text side */
+  .ugc-text {}
+  .ugc-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #8B6FCC;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .ugc-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: #8B6FCC;
+  }
+  .ugc-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    color: #1A1040;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  .ugc-desc {
+    font-size: 1rem;
+    color: #4A4070;
+    line-height: 1.75;
+    font-weight: 400;
+    max-width: 460px;
+  }
+  .ugc-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .ugc-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+  .ugc-feature-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+  .ugc-feature-text {
+    font-size: 0.9rem;
+    color: #4A4070;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .ugc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 2.5rem;
+    background: #1A1040;
+    color: white;
+    padding: 0.9rem 2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.3s, transform 0.2s;
+    cursor: none;
+  }
+  .ugc-cta:hover { background: #8B6FCC; transform: translateY(-2px); }
 
   /* VIDEO CLIPS SECTION */
   .clips-section {
@@ -797,7 +997,6 @@
     font-weight: 300;
     max-width: 400px;
   }
-  .contact-right {}
   .contact-methods {
     display: flex;
     flex-direction: column;
@@ -833,7 +1032,6 @@
     transition: background 0.3s;
   }
   .contact-method:hover .contact-method-icon { background: var(--orange); }
-  .contact-method-text {}
   .contact-method-label {
     font-size: 0.7rem;
     color: rgba(245,237,214,0.4);
@@ -921,10 +1119,6 @@
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-  }
 
   /* Noise overlay */
   body::after {
@@ -936,6 +1130,35 @@
     pointer-events: none;
     z-index: 9997;
   }
+
+  .btn-primary {
+    background: var(--orange);
+    color: white;
+    padding: 1rem 2.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--orange-light);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
 </style>
 </head>
 <body>
@@ -988,10 +1211,6 @@
           <div class="stat-label">Avg ROAS</div>
         </div>
       </div>
-    </div>
-    <div class="hero-cta-row">
-      <a href="#contact" class="btn-primary"><span>Start a Project</span></a>
-      <a href="#work" class="btn-secondary">See our work <span class="arrow">→</span></a>
     </div>
   </div>
 
@@ -1106,6 +1325,143 @@
   </div>
 </section>
 
+<!-- ======================== -->
+<!-- UGC PARTNERSHIP SECTION  -->
+<!-- ======================== -->
+<section class="ugc-section" id="ugc">
+  <div class="ugc-inner">
+    <!-- Phone Mockups -->
+    <div class="ugc-phones reveal">
+
+      <!-- Phone 1 - Left (skincare creator) -->
+      <div class="phone-mockup phone-left">
+        <div class="phone-inner">
+          <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=700&fit=crop&crop=face" alt="UGC Creator Skincare" loading="lazy">
+          <div class="phone-ui">
+            <div class="phone-ui-top">
+              <span>Reels</span>
+            </div>
+            <div class="phone-ui-bottom">
+              <div class="phone-ui-user">
+                <div class="phone-ui-avatar"></div>
+                <span class="phone-ui-username">uhlavi_larab</span>
+                <span class="phone-ui-follow">Follow</span>
+              </div>
+              <div class="phone-ui-caption">People think retinol is scary. It's not — if you...</div>
+              <div class="phone-ui-partnership">Paid partnership with riveladorma...</div>
+            </div>
+            <div class="phone-ui-right">
+              <div class="phone-action">
+                <span class="phone-action-icon heart-icon">♥</span>
+                <span class="phone-action-count">109</span>
+              </div>
+              <div class="phone-action">
+                <span class="phone-action-icon">💬</span>
+                <span class="phone-action-count">25</span>
+              </div>
+              <div class="phone-action">
+                <span class="phone-action-icon">➤</span>
+                <span class="phone-action-count">36</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone 2 - Center (product showcase) -->
+      <div class="phone-mockup phone-center">
+        <div class="phone-inner">
+          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=700&fit=crop&crop=face" alt="UGC Creator Beauty Product" loading="lazy">
+          <div class="phone-ui">
+            <div class="phone-ui-top">
+              <span>Reels</span>
+            </div>
+            <div class="phone-ui-bottom">
+              <div class="phone-ui-user">
+                <div class="phone-ui-avatar"></div>
+                <span class="phone-ui-username">saakshi.sr</span>
+                <span class="phone-ui-follow">Follow</span>
+              </div>
+              <div class="phone-ui-caption">IT GENUINELY GIVES ME the most radiant skin...</div>
+              <div class="phone-ui-partnership">saakshi.sr and nilaofficial.in · Paid partnership</div>
+            </div>
+            <div class="phone-ui-right">
+              <div class="phone-action">
+                <span class="phone-action-icon heart-icon">♥</span>
+                <span class="phone-action-count">2</span>
+              </div>
+              <div class="phone-action">
+                <span class="phone-action-icon">💬</span>
+                <span class="phone-action-count">13</span>
+              </div>
+              <div class="phone-action">
+                <span class="phone-action-icon">➤</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone 3 - Right (serum dropper) -->
+      <div class="phone-mockup phone-right">
+        <div class="phone-inner">
+          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&h=700&fit=crop&crop=face" alt="UGC Creator Serum" loading="lazy">
+          <div class="phone-ui">
+            <div class="phone-ui-top">
+              <span>Reels</span>
+            </div>
+            <div class="phone-ui-bottom">
+              <div class="phone-ui-user">
+                <div class="phone-ui-avatar"></div>
+                <span class="phone-ui-username">saakshi.sr</span>
+                <span class="phone-ui-follow">Follow</span>
+              </div>
+              <div class="phone-ui-caption">water like texture 💧 #ad If I had to name one product that...</div>
+              <div class="phone-ui-partnership">saakshi.sr and tugainessentials · Paid partnership</div>
+            </div>
+            <div class="phone-ui-right">
+              <div class="phone-action">
+                <span class="phone-action-icon heart-icon">♥</span>
+                <span class="phone-action-count">LIKES</span>
+              </div>
+              <div class="phone-action">
+                <span class="phone-action-icon">💬</span>
+                <span class="phone-action-count">2</span>
+              </div>
+              <div class="phone-action">
+                <span class="phone-action-icon">➤</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Text Content -->
+    <div class="ugc-text reveal reveal-delay-2">
+      <div class="ugc-eyebrow">Performance UGC Videos</div>
+      <h2 class="ugc-title">Partnership Ads with UGC Creators</h2>
+      <p class="ugc-desc">We team up with creators to turn their authentic content into ads. These partnership ads help your brand build trust and credibility while reaching the right audiences. Because the content feels natural and relatable, it drives better engagement, higher click-throughs, and stronger ROAS.</p>
+      <div class="ugc-features">
+        <div class="ugc-feature">
+          <div class="ugc-feature-dot"></div>
+          <div class="ugc-feature-text">Authentic creator content that doesn't feel like an ad</div>
+        </div>
+        <div class="ugc-feature">
+          <div class="ugc-feature-dot"></div>
+          <div class="ugc-feature-text">Proven to outperform brand-produced creatives by 4x</div>
+        </div>
+        <div class="ugc-feature">
+          <div class="ugc-feature-dot"></div>
+          <div class="ugc-feature-text">Full whitelisting & partnership ad setup handled by us</div>
+        </div>
+      </div>
+      <a href="#contact" class="ugc-cta">Get UGC Creatives →</a>
+    </div>
+  </div>
+</section>
+
 <!-- CLIPS / WORK SECTION -->
 <section class="clips-section" id="work">
   <div class="clips-intro">
@@ -1123,7 +1479,6 @@
       <div class="clip-thumb">
         <div class="clip-play">▶</div>
         <div class="clip-duration">55s</div>
-        <!-- Decorative gradient overlay -->
         <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(232,86,10,0.2),rgba(13,74,74,0.6));"></div>
         <div style="position:absolute;top:1.5rem;left:1.5rem;font-family:'Bebas Neue',sans-serif;font-size:1rem;color:rgba(245,237,214,0.5);letter-spacing:0.15em;">BRAND FILM</div>
       </div>
@@ -1358,7 +1713,7 @@
   }
   animateRing();
 
-  document.querySelectorAll('a, button, .service-card, .process-step, .clip-card').forEach(el => {
+  document.querySelectorAll('a, button, .service-card, .process-step, .clip-card, .phone-mockup').forEach(el => {
     el.addEventListener('mouseenter', () => {
       cursor.style.width = '20px';
       cursor.style.height = '20px';
