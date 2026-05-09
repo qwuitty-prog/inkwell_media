@@ -494,7 +494,7 @@
 
     /* ── SERVICES ── */
     #services {
-      background: #fff;
+      background: #0f0f0f;
       border-radius: 40px 40px 0 0;
       padding: 5rem 1.25rem;
     }
@@ -502,7 +502,7 @@
     @media (min-width: 768px) { #services { border-radius: 60px 60px 0 0; padding: 8rem 2.5rem; } }
 
     .services-h2 {
-      color: #0C0C0C;
+      color: #D7E2EA;
       font-size: clamp(3rem, 12vw, 160px);
       font-weight: 900;
       text-transform: uppercase;
@@ -521,16 +521,16 @@
       align-items: center;
       gap: 1.5rem;
       padding: 2rem 0;
-      border-top: 1px solid rgba(12,12,12,0.15);
+      border-top: 1px solid rgba(215,226,234,0.12);
     }
-    .service-item:last-child { border-bottom: 1px solid rgba(12,12,12,0.15); }
+    .service-item:last-child { border-bottom: 1px solid rgba(215,226,234,0.12); }
     @media (min-width: 640px) { .service-item { padding: 2.5rem 0; gap: 2rem; } }
     @media (min-width: 768px) { .service-item { padding: 3rem 0; gap: 2.5rem; } }
 
     .service-num {
       font-size: clamp(3rem, 10vw, 140px);
       font-weight: 900;
-      color: #0C0C0C;
+      color: #D7E2EA;
       line-height: 1;
       flex-shrink: 0;
       min-width: clamp(3rem, 10vw, 140px);
@@ -538,7 +538,7 @@
 
     .service-info { flex: 1; }
     .service-name {
-      color: #0C0C0C;
+      color: #D7E2EA;
       font-weight: 500;
       text-transform: uppercase;
       font-size: clamp(1rem, 2.2vw, 2.1rem);
@@ -546,7 +546,7 @@
       margin-bottom: 0.4rem;
     }
     .service-desc {
-      color: #0C0C0C;
+      color: #D7E2EA;
       font-weight: 300;
       line-height: 1.65;
       max-width: 42rem;
@@ -836,7 +836,8 @@
   </style>
 </head>
 <body>
-<div class="main-wrapper" id="root">
+<canvas id="global-bg-canvas" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<div class="main-wrapper" id="root" style="position:relative;z-index:1;">
 
   <!-- ══════════════════ HERO ══════════════════ -->
   <section id="hero">
@@ -1495,6 +1496,78 @@
     }, { threshold: 0.01 });
     contactObs.observe(contactSec);
   }
+
+
+  // ── GLOBAL BACKGROUND CANVAS (fixed, full page) ──
+  (function() {
+    const gc = document.getElementById('global-bg-canvas');
+    if (!gc) return;
+    const ctx = gc.getContext('2d');
+    let W, H;
+    function resize() {
+      W = gc.width = window.innerWidth;
+      H = gc.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Drifting glow orbs
+    const orbs = [
+      { x: 0.1,  y: 0.2,  r: 0.28, color: [182, 0, 168],   a: 0.10, dx: 0.00018, dy: 0.00010 },
+      { x: 0.85, y: 0.4,  r: 0.22, color: [118, 33, 176],  a: 0.08, dx:-0.00014, dy: 0.00013 },
+      { x: 0.5,  y: 0.75, r: 0.25, color: [190, 76, 0],    a: 0.07, dx: 0.00010, dy:-0.00012 },
+      { x: 0.2,  y: 0.85, r: 0.20, color: [182, 0, 168],   a: 0.07, dx:-0.00009, dy:-0.00008 },
+      { x: 0.75, y: 0.15, r: 0.18, color: [118, 33, 176],  a: 0.08, dx: 0.00012, dy: 0.00015 },
+      { x: 0.45, y: 0.45, r: 0.30, color: [100, 0, 160],   a: 0.06, dx:-0.00007, dy: 0.00009 },
+    ];
+
+    // Floating particles
+    const pts = Array.from({ length: 70 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: Math.random() * 1.3 + 0.3,
+      speed: Math.random() * 0.00008 + 0.00003,
+      drift: (Math.random() - 0.5) * 0.00003,
+      opacity: Math.random() * 0.22 + 0.05,
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Draw orbs
+      orbs.forEach(o => {
+        o.x += o.dx; o.y += o.dy;
+        if (o.x < -0.1 || o.x > 1.1) o.dx *= -1;
+        if (o.y < -0.1 || o.y > 1.1) o.dy *= -1;
+        const grd = ctx.createRadialGradient(
+          o.x * W, o.y * H, 0,
+          o.x * W, o.y * H, o.r * Math.min(W, H)
+        );
+        grd.addColorStop(0, `rgba(${o.color[0]},${o.color[1]},${o.color[2]},${o.a})`);
+        grd.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.beginPath();
+        ctx.arc(o.x * W, o.y * H, o.r * Math.min(W, H), 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+      });
+
+      // Draw particles
+      pts.forEach(p => {
+        p.y -= p.speed;
+        p.x += p.drift;
+        if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+        if (p.x < 0) p.x = 1;
+        if (p.x > 1) p.x = 0;
+        ctx.beginPath();
+        ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(215,226,234,${p.opacity})`;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
 
 })();
 </script>
