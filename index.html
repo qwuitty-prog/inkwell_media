@@ -7,6 +7,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Preconnect to Cloudinary CDN for faster video delivery -->
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+  <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+
+  <!-- Preload first 3 upper videos (visible on page load) -->
+  <link rel="preload" as="video" href="https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841917/up_1_egcpt4.mp4" />
+  <link rel="preload" as="video" href="https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841920/up2_nmgsnc.mp4" />
+  <link rel="preload" as="video" href="https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841920/up3_x8ngeq.mp4" />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body, #root { background: #0C0C0C; font-family: 'Kanit', sans-serif; }
@@ -324,6 +334,7 @@
       display: flex; gap: 0.75rem; will-change: transform; width: max-content;
     }
 
+    /* Portrait video cards */
     .portrait-card {
       width: 180px; height: 320px; border-radius: 1.25rem; object-fit: cover;
       flex-shrink: 0; display: block; background: #111;
@@ -335,12 +346,64 @@
     @media (min-width: 640px) { .portrait-card { width: 220px; height: 390px; } }
     @media (min-width: 1024px) { .portrait-card { width: 260px; height: 462px; } }
 
+    /* Portrait card link wrapper */
+    .portrait-card-link {
+      position: relative;
+      display: inline-block;
+      flex-shrink: 0;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      text-decoration: none;
+      -webkit-tap-highlight-color: rgba(182,0,168,0.15);
+    }
+    .portrait-card-link video.portrait-card {
+      display: block;
+      width: 180px; height: 320px;
+    }
+    @media (min-width: 640px) {
+      .portrait-card-link video.portrait-card { width: 220px; height: 390px; }
+      .portrait-card-link { transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s; }
+      .portrait-card-link:hover { transform: scale(1.06) translateY(-8px); box-shadow: 0 24px 60px rgba(182,0,168,0.28); z-index: 2; position: relative; }
+    }
+    @media (min-width: 1024px) {
+      .portrait-card-link video.portrait-card { width: 260px; height: 462px; }
+    }
+
+    /* Play overlay on portrait card links */
+    .portrait-card-play {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(182,0,168,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 3;
+      box-shadow: 0 0 0 3px rgba(182,0,168,0.22), 0 2px 12px rgba(0,0,0,0.5);
+      opacity: 0.7;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .portrait-card-play svg {
+      width: 16px; height: 16px; fill: white; margin-left: 2px;
+    }
+    @media (min-width: 640px) {
+      .portrait-card-play {
+        width: 44px; height: 44px; bottom: 12px; right: 12px; opacity: 0;
+        transform: scale(0.8);
+      }
+      .portrait-card-play svg { width: 20px; height: 20px; }
+      .portrait-card-link:hover .portrait-card-play { opacity: 1; transform: scale(1); }
+    }
+
     /* ══════════════════════════════════════════════
        16:9 BOTTOM MARQUEE — HIDDEN ON MOBILE
     ══════════════════════════════════════════════ */
     #marquee-bottom {
       background: #0C0C0C; padding: 3rem 0 4rem; overflow: hidden;
-      /* MOBILE FIX: hide entirely on phone */
       display: none;
     }
     @media (min-width: 640px) {
@@ -643,7 +706,6 @@
       flex: 1; display: flex; flex-direction: column; position: relative; padding-bottom: 2.5rem;
       opacity: 0; transform: translateY(24px);
       transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1);
-      /* Make each step tappable on mobile */
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
@@ -711,9 +773,6 @@
     .process-step.step-active .process-cycle-bar { animation: cycleBarGrow var(--cycle-dur, 3.2s) linear forwards; }
     @keyframes cycleBarGrow { from { width: 0%; } to { width: 100%; } }
 
-    /* ══════════════════════════════════════════════
-       CONTACT SECTION — MOBILE EMAIL FIX
-    ══════════════════════════════════════════════ */
     #contact { background: #0C0C0C; position: relative; overflow: hidden; padding: 0; border-top: 1px solid rgba(215,226,234,0.056); }
     #contact-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; display: none; }
     @media (min-width: 640px) { #contact-canvas { display: block; } }
@@ -731,7 +790,6 @@
       display: flex; align-items: center; gap: 1rem; padding: 1.4rem 0.5rem;
       border-top: 1px solid rgba(215,226,234,0.07); text-decoration: none; border-radius: 8px;
       position: relative; overflow: hidden;
-      /* MOBILE FIX: prevent horizontal overflow */
       min-width: 0;
     }
     @media (min-width: 640px) {
@@ -768,7 +826,6 @@
     .contact-item-label {
       color: #D7E2EA; font-size: clamp(0.7rem, 1.3vw, 0.85rem); text-transform: uppercase;
       letter-spacing: 0.15em; font-weight: 300; opacity: 0.4;
-      /* MOBILE FIX: fixed width on mobile, min-width on desktop */
       width: 64px; flex-shrink: 0;
     }
     @media (min-width: 640px) { .contact-item-label { width: auto; min-width: 120px; } }
@@ -776,11 +833,9 @@
     .contact-item-value {
       color: #D7E2EA; font-weight: 500;
       text-transform: uppercase; letter-spacing: 0.04em;
-      /* MOBILE FIX: allow shrink + truncate cleanly */
       flex: 1; min-width: 0;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       opacity: 0.85;
-      /* MOBILE FIX: smaller font on mobile to fit email */
       font-size: clamp(0.65rem, 2.5vw, 1.35rem);
     }
     @media (min-width: 640px) {
@@ -1021,7 +1076,7 @@
     </div>
   </section>
 
-  <!-- BOTTOM 16:9 VIDEO MARQUEE — desktop only (hidden on mobile via CSS) -->
+  <!-- BOTTOM 16:9 VIDEO MARQUEE — desktop only -->
   <section id="marquee-bottom">
     <div id="marquee-row-bottom" class="marquee-row">
       <div id="marquee-track-bottom" class="marquee-track"></div>
@@ -1230,26 +1285,28 @@
   `;
   document.head.appendChild(styleEl);
 
-  // ── VIDEO SOURCES ──
+  // ── CLOUDINARY VIDEO SOURCES with YouTube links ──
+  // topVideosA: up1–up7 with their YouTube links
   const topVideosA = [
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/new_videos/up1.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/new_videos/up2.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/new_videos/up3.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/new_videos/up4.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/new_videos/up5.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/new_videos/up6.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/new_videos/up7.mp4',
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841917/up_1_egcpt4.mp4',  href: 'https://youtu.be/uWZXMMFE1Uo?si=ZAgjHOHM83P5m08g' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841920/up2_nmgsnc.mp4',  href: 'https://youtu.be/_1cN__vNoLo?si=QA3JY0NNG0vHMHE3' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841920/up3_x8ngeq.mp4',  href: 'https://youtu.be/_1cN__vNoLo?si=QA3JY0NNG0vHMHE3' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841920/up4_wcgsq6.mp4',  href: 'https://youtu.be/3QFz2QgpviU?si=N1bsTDqPewNp-h6C' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841920/up5_aktyaq.mp4',  href: 'https://youtu.be/AzjhYe8pmkM?si=JAjrY8-4liscg_du' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841920/up6_rhlz7t.mp4',  href: 'https://youtu.be/Q_2sFWeqYdg?si=njNmaTUUTwDnsCZx' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841916/up7_caiiht.mp4',  href: 'https://youtu.be/1oSFxC00rxM?si=-1atk4DehllKwrgb' },
   ];
 
+  // topVideosB: d1–d7 with their YouTube links
   const topVideosB = [
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d1.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d2.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d3.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d4.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d5.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d6.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d7.mp4',
-    'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/916%20lower%20videos/d4.mp4',
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841916/d1_nv5gyu.mp4',   href: 'https://youtu.be/2PdpMfpFbIs?si=WV2fCQMJeZKnSm2a' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841916/d2_nbhppy.mp4',   href: 'https://youtu.be/X-Skzcu-A8A?si=eHk9_HJFwG89zU0F' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841917/d3_zvaam6.mp4',   href: 'https://youtu.be/5G_Og45y3qU?si=sL_wTES3x6qHyJby' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841917/d4_dxrtze.mp4',   href: 'https://youtu.be/tQdNckMe4-M?si=LdAZP6qvSnvmsEr0' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841918/d5_qvih1n.mp4',   href: 'https://youtu.be/K04yPV1hiaI?si=QKoNix9dfneQNKmn' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841921/d6_zy2ez2.mp4',   href: 'https://youtu.be/HIfqLG8xsGY?si=18gAFcpgIOP6N8bS' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841916/d7_gwcs4h.mp4',   href: 'https://youtu.be/HIfqLG8xsGY?si=18gAFcpgIOP6N8bS' },
+    { src: 'https://res.cloudinary.com/dyjafr3do/video/upload/f_auto,q_auto,w_540/v1778841917/d4_dxrtze.mp4',   href: 'https://youtu.be/tQdNckMe4-M?si=LdAZP6qvSnvmsEr0' },
   ];
 
   const bottomVideos = [
@@ -1260,26 +1317,46 @@
     { src: 'https://raw.githubusercontent.com/qwuitty-prog/inkwell_media/main/assets/16%3A9%20Videos/5.mp4', href: 'https://youtu.be/RJfp7paUSKY?si=ZlD-Wg67W_QN95wc' },
   ];
 
-  // ── BUILD 9:16 PORTRAIT MARQUEE ──
-  function buildVideoMarquee(rowEl, srcs, cssClass, durSec) {
+  // ── BUILD 9:16 PORTRAIT MARQUEE with clickable links ──
+  // Each video card is now wrapped in an <a> tag that opens the YouTube link
+  function buildVideoMarquee(rowEl, items, cssClass, durSec) {
     rowEl.style.setProperty('--dur', durSec + 's');
     rowEl.classList.add(cssClass);
     for (let c = 0; c < 2; c++) {
-      srcs.forEach(src => {
+      items.forEach((item, idx) => {
+        // Create the anchor wrapper
+        const link = document.createElement('a');
+        link.className = 'portrait-card-link';
+        link.href = item.href;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute('aria-label', 'Watch on YouTube');
+
+        // Create the video element
         const video = document.createElement('video');
-        video.setAttribute('src', src);
+        const isEager = (c === 0 && idx < 3);
+        video.setAttribute('src', item.src);
         video.setAttribute('autoplay', '');
         video.setAttribute('muted', '');
         video.setAttribute('loop', '');
         video.setAttribute('playsinline', '');
         video.setAttribute('webkit-playsinline', '');
-        video.setAttribute('preload', 'metadata');
+        video.setAttribute('preload', isEager ? 'auto' : 'metadata');
+        if (isEager) video.setAttribute('fetchpriority', 'high');
         video.muted = true;
         video.autoplay = true;
         video.loop = true;
         video.playsInline = true;
         video.className = 'portrait-card';
-        rowEl.appendChild(video);
+
+        // Play icon overlay
+        const playIcon = document.createElement('div');
+        playIcon.className = 'portrait-card-play';
+        playIcon.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>`;
+
+        link.appendChild(video);
+        link.appendChild(playIcon);
+        rowEl.appendChild(link);
       });
     }
   }
@@ -1306,18 +1383,18 @@
         video.autoplay = true;
         video.loop = true;
         video.playsInline = true;
-        const link = document.createElement('a');
-        link.className = 'marquee-video-link';
-        link.href = item.href;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.setAttribute('aria-label', 'Watch on YouTube');
+        const aLink = document.createElement('a');
+        aLink.className = 'marquee-video-link';
+        aLink.href = item.href;
+        aLink.target = '_blank';
+        aLink.rel = 'noopener noreferrer';
+        aLink.setAttribute('aria-label', 'Watch on YouTube');
         const playIcon = document.createElement('div');
         playIcon.className = 'marquee-video-play';
         playIcon.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>`;
         wrap.appendChild(video);
         wrap.appendChild(playIcon);
-        wrap.appendChild(link);
+        wrap.appendChild(aLink);
         rowEl.appendChild(wrap);
       });
     }
@@ -1343,7 +1420,7 @@
     buildBottomVideoMarquee(bottomTrack, bottomVideos, 'marquee-loop-left', botDur);
   }
 
-  // ── ROBUST PLAY — retries once after 800ms ──
+  // ── PLAY — immediate, no stagger delay ──
   function tryPlay(video) {
     video.muted = true;
     const p = video.play();
@@ -1352,55 +1429,53 @@
         setTimeout(() => {
           video.muted = true;
           video.play().catch(() => {});
-        }, 800);
+        }, 600);
       });
     }
   }
 
-  function lazyPlayRow(rowEl) {
-    rowEl.querySelectorAll('video').forEach((v, i) => {
-      const delay = IS_MOBILE ? i * 50 : i * 80;
-      setTimeout(() => {
-        if (v.getAttribute('preload') === 'none') {
-          v.setAttribute('preload', 'metadata');
-          v.load();
-        }
-        tryPlay(v);
-      }, delay);
+  function playRow(rowEl) {
+    rowEl.querySelectorAll('video').forEach((v) => {
+      tryPlay(v);
     });
   }
 
-  // ── LAZY PLAY — top portrait marquee ──
-  const ioTop = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      lazyPlayRow(topRowA);
-      lazyPlayRow(topRowB);
-      ioTop.disconnect();
-    }
-  }, { threshold: 0.05 });
-  const topSec = document.getElementById('portrait-marquee-top');
-  if (topSec) ioTop.observe(topSec);
+  // ── PLAY top rows immediately on DOMContentLoaded ──
+  function startTopVideos() {
+    playRow(topRowA);
+    playRow(topRowB);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startTopVideos);
+  } else {
+    startTopVideos();
+  }
+
+  // Also trigger on first scroll/touch for iOS Safari
+  let userGestureFired = false;
+  function onUserGesture() {
+    if (userGestureFired) return;
+    userGestureFired = true;
+    document.querySelectorAll('video').forEach(v => {
+      if (v.paused) { v.muted = true; tryPlay(v); }
+    });
+  }
+  document.addEventListener('touchstart', onUserGesture, { once: true, passive: true });
+  document.addEventListener('click',      onUserGesture, { once: true, passive: true });
+  document.addEventListener('scroll',     onUserGesture, { once: true, passive: true });
 
   // ── LAZY PLAY — bottom 16:9 marquee (desktop only) ──
   if (!IS_MOBILE) {
     const ioBottom = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        lazyPlayRow(document.getElementById('marquee-track-bottom'));
+        playRow(document.getElementById('marquee-track-bottom'));
         ioBottom.disconnect();
       }
     }, { threshold: 0, rootMargin: '200px' });
     const bottomSec = document.getElementById('marquee-bottom');
     if (bottomSec) ioBottom.observe(bottomSec);
   }
-
-  // ── iOS Safari: kick all paused videos on first user gesture ──
-  function kickPausedVideos() {
-    document.querySelectorAll('video').forEach(v => {
-      if (v.paused) { v.muted = true; tryPlay(v); }
-    });
-  }
-  document.addEventListener('touchstart', kickPausedVideos, { once: true, passive: true });
-  document.addEventListener('scroll',     kickPausedVideos, { once: true, passive: true });
 
   // ── FADE-IN ──
   const fadeEls = document.querySelectorAll('.fade-init');
@@ -1440,26 +1515,21 @@
     });
 
     let activeIdx = -1, cycleTimer = null, hasStarted = false;
-    // Track whether the user has manually tapped a step (pauses auto-cycle temporarily)
     let userPausedUntil = 0;
 
     function isDesktop() { return window.innerWidth >= 768; }
 
-    // Returns the exact pixel fraction (0–1) along the line track
-    // that corresponds to node[idx], measured from the track's own origin.
     function nodeFraction(idx) {
       const trackRect = document.getElementById('process-line-track').getBoundingClientRect();
       const node = steps[idx].querySelector('.process-node');
       if (!node) return idx / (TOTAL - 1);
       const nodeRect = node.getBoundingClientRect();
       if (isDesktop()) {
-        // Horizontal: measure centre-x of node relative to track left / track width
         const trackW = trackRect.width;
         if (trackW === 0) return idx / (TOTAL - 1);
         const nodeCX = nodeRect.left + nodeRect.width / 2;
         return Math.max(0, Math.min(1, (nodeCX - trackRect.left) / trackW));
       } else {
-        // Vertical: measure centre-y of node relative to track top / track height
         const trackH = trackRect.height;
         if (trackH === 0) return idx / (TOTAL - 1);
         const nodeCY = nodeRect.top + nodeRect.height / 2;
@@ -1505,7 +1575,6 @@
           bar.style.animation = '';
         }
       });
-      // Use actual node position instead of raw index fraction
       const frac = idx < 0 ? 0 : nodeFraction(idx);
       animateLineTo(frac, 500);
     }
@@ -1514,7 +1583,6 @@
       if (cycleTimer) clearTimeout(cycleTimer);
       let idx = 0;
       function advance() {
-        // If user tapped recently, skip this tick and reschedule
         if (Date.now() < userPausedUntil) {
           cycleTimer = setTimeout(advance, userPausedUntil - Date.now() + 100);
           return;
@@ -1541,7 +1609,6 @@
     }, { threshold: 0.15 });
     revealObserver.observe(timeline);
 
-    // ── DESKTOP: hover to manually activate, resume cycle on leave ──
     steps.forEach((step, i) => {
       step.addEventListener('mouseenter', () => {
         if (cycleTimer) { clearTimeout(cycleTimer); cycleTimer = null; }
@@ -1556,21 +1623,10 @@
         }
       });
 
-      // ── MOBILE / TOUCH: tap to activate step, pause auto-cycle for a bit ──
-      step.addEventListener('touchstart', (e) => {
-        // Don't call preventDefault — let scroll still work naturally.
-        // Only intercept if the touch starts and ends on this step (tap, not scroll).
-      }, { passive: true });
-
       step.addEventListener('touchend', (e) => {
-        // Detect a tap: if the touch moved very little, treat as tap
-        const touch = e.changedTouches[0];
-        // We'll use a simple flag approach — activate the step immediately
         if (cycleTimer) { clearTimeout(cycleTimer); cycleTimer = null; }
         activateStep(i);
-        // Pause the auto-cycle for 4 seconds so the user can read the expanded step
         userPausedUntil = Date.now() + 4000;
-        // Resume auto-cycle after 4 seconds, continuing from next step
         cycleTimer = setTimeout(() => {
           let idx = (i + 1) % TOTAL;
           (function advance() {
